@@ -13,5 +13,6 @@
 - Activate venv, run command "venv/Scripts/activate.bat"
 - Upgrade pip, run command "python.exe -m pip install -upgrade pip"
 - Install requirements, run command "pip install -r requirements.txt"
-- Run build.bat and waiting while executing
-- Open src/*.html files with news trends
+- Create folder /data
+- Run /build.bat and waiting while executing
+- Open /src/*.html files with news trends
