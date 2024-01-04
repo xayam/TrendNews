@@ -1,0 +1,12 @@
+.github/
+venv/
+.idea/
+.run/
+__pycache__/
+build/
+dist/
+data/*
+*.exe
+src/__pycache__/
+
+
