@@ -1,0 +1,60 @@
+<html>
+<head>
+
+</head>
+
+<body>
+<canvas id="myCanvas" style="width: 800px; height: 500px; border: 1px solid black;">
+</canvas>
+<br />
+<div id="tooltip"></div>
+<script>
+var canvas = document.getElementById("myCanvas");
+var canvasWidth = canvas.width;
+var canvasHeight = canvas.height;
+var ctx = canvas.getContext("2d");
+var canvasData = ctx.getImageData(0, 0, canvasWidth, canvasHeight)
+function drawPixel (x, y, r, g, b, a) {
+    var index = (x + y * canvasWidth) * 4;
+    
+    canvasData.data[index + 0] = r;
+    canvasData.data[index + 1] = g;
+    canvasData.data[index + 2] = b;
+    canvasData.data[index + 3] = a;
+	
+}
+
+function updateCanvas() {
+    ctx.putImageData(canvasData, 0, 0);
+}
+
+//__POINTS__
+
+canvas.onmousemove = function(evt) {
+    var rect = canvas.getBoundingClientRect();
+    var scaleX = canvas.width / rect.width;
+    var scaleY = canvas.height / rect.height;
+
+    var mouseX = (evt.clientX - rect.left) * scaleX;
+    var mouseY = (evt.clientY - rect.top) * scaleY;
+    minimum = 1000000
+    index = 0
+    for (var i = 0; i < points.length; i++) {
+        x = points[i]["x"]
+        y = points[i]["y"]
+        distance = ((mouseX - x) ** 2 + (mouseY - y) ** 2) ** 0.5
+        if (distance < minimum) {
+            minimum = distance
+            index = i
+        }
+    }
+    var mouseX = evt.pageX - canvas.offsetX;
+    var mouseY = evt.pageY - canvas.offsetY;
+    var tooltip = document.getElementById("tooltip");
+    tooltip.innerHTML = points[index]["info"]
+}
+
+</script>
+
+</body>
+</html>
