@@ -15,4 +15,4 @@
 - Install requirements, run command "pip install -r requirements.txt"
 - Create folder /data
 - Run /build.bat and waiting while executing
-- Open /src/*.html files with news trends
+- Open /*.html files with news trends
