@@ -18,4 +18,4 @@
 - Waiting finished
 - Run src/riacalculate.py
 - Waiting finished
-- Open /src/ria/*.html files with news trends
+- Open /src/*.html files with news trends
