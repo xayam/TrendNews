@@ -1,0 +1,370 @@
+<html lang="ru">
+<head>
+    <title>TrendNews v2.0</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-type">
+    <style>
+        body {
+            overflow-y: scroll;
+            margin-left: 10px;
+            margin-right: 10px;
+            padding: 0;
+        }
+
+        #container {
+            width: 100%;
+        }
+
+        #myCanvas {
+            width: 100%;
+            cursor: pointer;
+            border-width: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        #tooltip {
+            width: 100%;
+        }
+
+        #titletrend, #titleantitrend {
+            font-style: italic;
+        }
+
+        #infodate, #infotrend, #search, #yearmonth {
+            width: 48%;
+        }
+
+        #rangetrend {
+            width: 48%;
+        }
+
+        #rangedate {
+            width: 48%;
+        }
+
+        #infodate, #infotrend {
+            display: inline-block;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        #search, #yearmonth {
+            display: inline-block;
+            text-align: center;
+        }
+
+        #searchinput {
+            width: 80%;
+        }
+    </style>
+</head>
+<body>
+<script>
+    //__FUSE__
+</script>
+<div id="container">
+    <canvas id="myCanvas"></canvas>
+
+    <span id="infodate">текущая дата: 2023.01</span>
+    <span id="infotrend">текущий тренд: 50%</span>
+
+    <label for="rangedate"></label><input id="rangedate" type="range" min="0" max="1000" step="1" value="500">
+    <label for="rangetrend"></label><input id="rangetrend" type="range" min="0" max="6000" step="1" value="3000">
+
+    <span id="search">
+        <label for="searchinput"></label>
+        <input id="searchinput" type="text" placeholder="Поиск новостей в текущем месяце">
+        <button id="find" type="submit">ОК</button>
+    </span>
+    <span id="yearmonth">
+        <label for="year"></label>
+        <select id="year">
+            <option value="2023">2023</option>
+            <option value="2022">2022</option>
+            <option value="2021">2021</option>
+            <option value="2020">2020</option>
+            <option value="2019">2019</option>
+            <option value="2018">2018</option>
+            <option value="2017">2017</option>
+            <option value="2016">2016</option>
+            <option value="2015">2015</option>
+            <option value="2014">2014</option>
+        </select>
+        <label for="month"></label>
+        <select id="month">
+            <option value="01">январь</option>
+            <option value="02">февраль</option>
+            <option value="03">март</option>
+            <option value="04">апрель</option>
+            <option value="05">май</option>
+            <option value="06">июнь</option>
+            <option value="07">июль</option>
+            <option value="08">август</option>
+            <option value="09">сентябрь</option>
+            <option value="10">октябрь</option>
+            <option value="11">ноябрь</option>
+            <option value="12">декабрь</option>
+        </select>
+        <button id="ok">OK</button>
+    </span>
+</div>
+<div id="tooltip">
+    <p>&nbsp;&nbsp;&nbsp;Одинарный клик левой кнопкой мыши - переход к выбранной новости.</p>
+    <p>&nbsp;&nbsp;&nbsp;Двойной клик - открытие новой вкладки с источником новости</p>
+    <p>&nbsp;&nbsp;&nbsp;Для поиска в текущем месяце - введите запрос в соответствующее поле и нажмите кнопку ОК</p>
+    <p>&nbsp;&nbsp;&nbsp;На графике чем правее, тем больше тренд. Чем выше - тем свежее новость.</p>
+    <p>&nbsp;&nbsp;&nbsp;В выпадающем списке можете выбрать месяц и год, если у Вас есть соответствующий файл.</p>
+    <p>&nbsp;&nbsp;&nbsp;Черным цветом показано направление изменения даты и тренда - больше-меньше.</p>
+    <p>&nbsp;&nbsp;&nbsp;Синим цветом написан источник новостей.</p>
+    <p>&nbsp;&nbsp;&nbsp;Красным цветом показано ключевое слово <a id="antitrend" href="" target="_blank">АНТИТРЕНД</a>
+        - анти тренд текущего месяца статья &laquo;<span id="titleantitrend"></span>&raquo;.</p>
+    <p>&nbsp;&nbsp;&nbsp;Зелёным цветом написано ключевое слово <a id="trend" href="" target="_blank">ТРЕНД</a> - тренд
+        текущего месяца статья &laquo;<span id="titletrend"></span>&raquo;.</p>
+</div>
+<script>
+    let canvas = document.getElementById("myCanvas");
+    canvas.width = 6000;
+    canvas.height = 1000;
+    let ctx = canvas.getContext("2d");
+
+    ctx.imageSmoothingEnabled = false;
+    ctx.mozImageSmoothingEnabled = false;
+    ctx.msImageSmoothingEnabled = false;
+    ctx.webkitImageSmoothingEnabled = false;
+
+    let tooltip = document.getElementById('tooltip');
+
+    let state = {
+        "pointX": 3000,
+        "pointY": 500,
+        "pointX_": 0,
+        "pointY_": 0,
+        "antitrend": 'Антитренд',
+        "trend": 'Тренд',
+        "index": undefined,
+    }
+
+    let rangedate = document.getElementById("rangedate");
+    let rangetrend = document.getElementById("rangetrend");
+    let points
+    let preffix
+
+    //__POINTS__
+
+    function update(state) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.font = "300px serif";
+        ctx.fillStyle = "#0000ff";
+        ctx.fillText("RIA.RU", 2700, 500);
+        ctx.font = "200px serif";
+        ctx.fillStyle = "#000000";
+        ctx.fillText("Дата", 0, 500);
+        ctx.fillText("Тренд", 3000, 950);
+
+        ctx.beginPath();
+        ctx.moveTo(50, 350);
+        ctx.lineTo(50, 170);
+        ctx.lineTo(70, 200);
+        ctx.moveTo(50, 170);
+        ctx.lineTo(30, 200);
+
+        ctx.moveTo(50, 550);
+        ctx.lineTo(50, 870);
+        ctx.lineTo(70, 840);
+        ctx.moveTo(50, 870);
+        ctx.lineTo(30, 840);
+
+        ctx.moveTo(3600, 950);
+        ctx.lineTo(5300, 950);
+        ctx.lineTo(5270, 930);
+        ctx.moveTo(5300, 950);
+        ctx.lineTo(5270, 970);
+
+        ctx.moveTo(2900, 950);
+        ctx.lineTo(600, 950);
+        ctx.lineTo(630, 930);
+        ctx.moveTo(600, 950);
+        ctx.lineTo(630, 970);
+
+        ctx.lineWidth = 10;
+        ctx.strokeStyle = '#000000';
+        ctx.stroke();
+
+        ctx.font = "150px serif";
+        ctx.fillText("больше", 0, 100);
+        ctx.fillText("меньше", 0, 1000);
+        ctx.fillText("больше", 5400, 1000);
+
+        ctx.font = "200px serif";
+        ctx.fillStyle = "#ff0000";
+        ctx.fillText(state["antitrend"], 700, 500);
+        ctx.fillStyle = "#00ff00";
+        ctx.fillText(state["trend"], 4000, 500);
+        let current = [{"x1": state["pointX"], "y1": state["pointY"], "color": "#009900"},
+            {"x1": state["pointX_"], "y1": state["pointY_"], "color": "#999999"}
+        ]
+        for (let j = 0; j < 2; j++) {
+            let i = current[j]
+            ctx.beginPath();
+            ctx.arc(i["x1"], i["y1"], 100, 0, 2 * Math.PI, false);
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = i["color"];
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(0, i["y1"]);
+            ctx.lineTo(6000, i["y1"]);
+            ctx.moveTo(i["x1"], 0);
+            ctx.lineTo(i["x1"], 1000);
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = i["color"];
+            ctx.stroke();
+        }
+        rangedate.value = 1000 - state["pointY"];
+        rangetrend.value = state["pointX"];
+        if (state["index"] !== undefined) {
+            let infodate = document.getElementById("infodate");
+            infodate.innerText = "текущая дата: " + points[state["index"]]["year"] + "." + points[state["index"]]["month"] + "." + points[state["index"]]["day"];
+            let infotrend = document.getElementById("infotrend");
+            infotrend.innerText = "текущий тренд: " + (points[state["index"]]["x"] * 100 / 6000).toFixed(2) + "%";
+        }
+    }
+
+    update(state)
+
+    function get_index(evt) {
+        let rect = canvas.getBoundingClientRect();
+        let scaleX = canvas.width / rect.width;
+        let scaleY = canvas.height / rect.height;
+        let mouseX = (evt.clientX - rect.left) * scaleX;
+        let mouseY = (evt.clientY - rect.top) * scaleY;
+        let minimum = 1000000
+        let index = 0
+        for (let i = 0; i < points.length; i++) {
+            let x = points[i]["x"]
+            let y = points[i]["y"]
+            let distance = ((mouseX - x) ** 2 + (mouseY - y) ** 2) ** 0.5
+            if (distance < minimum) {
+                minimum = distance
+                index = i
+            }
+        }
+        return index
+    }
+
+    canvas.addEventListener('click', function (evt) {
+        let index = get_index(evt)
+        let url = points[index]["url"];
+        tooltip.innerHTML = "<p>&nbsp;&nbsp;&nbsp;<a id='url' target='_blank' href='" +
+            url + "'>" + url + "</a></p>" + points[index]["info"];
+        state["pointX"] = points[index]["x"];
+        state["pointY"] = points[index]["y"];
+        state["index"] = index
+        update(state);
+    });
+
+    rangedate.addEventListener('change', function () {
+        let rect = canvas.getBoundingClientRect();
+        let scaleX = canvas.width / rect.width;
+        let scaleY = canvas.height / rect.height;
+        let mouseX = state["pointX"] / scaleX + rect.left
+        let mouseY = (1000 - rangedate.value) / scaleY + rect.top
+        canvas.dispatchEvent(
+            new MouseEvent(
+                "click",
+                {
+                    clientX: mouseX,
+                    clientY: mouseY,
+                    bubbles: true
+                }
+            )
+        );
+    });
+
+    rangetrend.addEventListener('change', function () {
+        let rect = canvas.getBoundingClientRect();
+        let scaleX = canvas.width / rect.width;
+        let scaleY = canvas.height / rect.height;
+        let mouseX = rangetrend.value / scaleX + rect.left
+        let mouseY = state["pointY"] / scaleY + rect.top
+        canvas.dispatchEvent(
+            new MouseEvent(
+                "click",
+                {
+                    clientX: mouseX,
+                    clientY: mouseY,
+                    bubbles: true
+                }
+            )
+        );
+    });
+
+    function choose(x, y) {
+        let rect = canvas.getBoundingClientRect();
+        let scaleX = canvas.width / rect.width;
+        let scaleY = canvas.height / rect.height;
+        let mouseX = x / scaleX + rect.left
+        let mouseY = y / scaleY + rect.top
+        canvas.dispatchEvent(
+            new MouseEvent(
+                "click",
+                {
+                    clientX: mouseX,
+                    clientY: mouseY,
+                    bubbles: true
+                }
+            )
+        );
+    }
+
+    canvas.addEventListener('mousemove', function (evt) {
+        let index = get_index(evt)
+        state["pointX_"] = points[index]["x"];
+        state["pointY_"] = points[index]["y"];
+        update(state);
+    });
+
+    canvas.addEventListener('dblclick', function () {
+        let url = document.getElementById('url').innerText;
+        window.open(url);
+    });
+
+    let ok = document.getElementById("ok");
+    ok.addEventListener('click', function () {
+        let year = document.getElementById("year").value;
+        let month = document.getElementById("month").value;
+        let last = new Date(year, month, 0);
+        window.location.href = preffix + year + month + "01-" + year + month + last.getDate() + ".html";
+    });
+
+    let searchinput = document.getElementById("searchinput");
+    let find = document.getElementById("find");
+    let options = {includeScore: true, keys: ['info']}
+    find.addEventListener('click', function () {
+        let fuse = new Fuse(points, options)
+        let result = fuse.search(searchinput.value)
+        let html = "<br/>"
+        if (result.length > 0) {
+            for (let i = 0; i < result.length; i++) {
+                html += "&nbsp;&nbsp;&nbsp;" + (1 - result[i]["score"]).toFixed(4) +
+                    "&nbsp;&nbsp;" +
+                    points[result[i]["refIndex"]]["year"] + "." +
+                    points[result[i]["refIndex"]]["month"] + "." +
+                    points[result[i]["refIndex"]]["day"] +
+                    "&nbsp;&nbsp;" +
+                    (points[result[i]["refIndex"]]["x"] * 100 / 6000).toFixed(2).padStart(5, '0') +
+                    "%&nbsp;&nbsp;" +
+                    "<a href='#' onclick='choose(" +
+                    points[result[i]["refIndex"]]["x"] + ", " +
+                    points[result[i]["refIndex"]]["y"] + ");'>" +
+                    points[result[i]["refIndex"]]["title"] + "</a>\n<br/>";
+            }
+        } else {
+            html += "Ничего не найдено"
+        }
+        tooltip.innerHTML = html
+    });
+</script>
+
+</body>
+</html>

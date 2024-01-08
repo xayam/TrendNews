@@ -1,0 +1,17 @@
+requests
+numpy
+scikit-learn
+gensim==3.8.3
+pandas
+regex
+tensorflow_text==2.10.0
+matplotlib
+tensorflow
+keras
+yake
+pymorphy2
+torch
+torchvision
+torchaudio
+transformers
+sentencepiece
