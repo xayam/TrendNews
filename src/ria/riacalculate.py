@@ -10,7 +10,8 @@ import pymorphy2
 import riacross as cross
 import riavision as vision
 
-preffix = "TrendNews-v2.2-ria.ru-"
+version = "v2.3"
+preffix = f"TrendNews-{version}-ria.ru-"
 domain = "https://ria.ru/"
 
 years = [str(a) for a in range(2023, 2022, -1)]
