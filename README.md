@@ -13,6 +13,9 @@
 - Activate venv, run command "venv/Scripts/activate.bat"
 - Upgrade pip, run command "python.exe -m pip install -upgrade pip"
 - Install requirements, run command "pip install -r requirements.txt"
-- Create folder /data
-- Run /build.bat and waiting while executing
-- Open /output/*.html files with news trends
+- Create folder src/ria/data
+- Run src/ria/riadownload.py
+- Waiting finished
+- Run src/riacalculate.py
+- Waiting finished
+- Open /src/ria/*.html files with news trends
