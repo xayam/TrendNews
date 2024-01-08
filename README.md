@@ -14,8 +14,8 @@
 - Upgrade pip, run command "python.exe -m pip install -upgrade pip"
 - Install requirements, run command "pip install -r requirements.txt"
 - Create folder src/ria/data
-- Run src/ria/riadownload.py
+- Run "python.exe src/ria/riadownload.py"
 - Waiting finished
-- Run src/riacalculate.py
+- Run "python.exe src/riacalculate.py"
 - Waiting finished
 - Open /src/*.html files with news trends
