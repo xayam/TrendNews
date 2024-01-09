@@ -10,9 +10,10 @@ import pymorphy2
 import riacross as cross
 import riavision as vision
 
-version = "v2.3"
-preffix = f"TrendNews-{version}-ria.ru-"
-domain = "https://ria.ru/"
+version = "v2.4"
+site = "ria.ru"
+preffix = f"TrendNews-{version}-{site}-"
+domain = f"https://{site}/"
 
 years = [str(a) for a in range(2023, 2022, -1)]
 months = [str(b).rjust(2, '0') for b in range(12, 0, -1)]
@@ -20,7 +21,7 @@ days = [str(c).rjust(2, '0') for c in range(31, 0, -1)]
 all_months = ["январь", "февраль", "март", "апрель", "май", "июнь",
               "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь"]
 all_days = ["понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"]
-all_stop = ["россия", "сми"]
+all_stop = ["россия", "сми", "ростёха"]
 
 extractor1 = yake.KeywordExtractor(lan="ru", n=1, dedupLim=0.3, top=1)
 extractor10 = yake.KeywordExtractor(lan="ru", n=1, dedupLim=0.3, top=10)
@@ -56,11 +57,10 @@ for year in years:
             txt = []
             url = []
             for filename in fn:
-                with open(f"{data1}{folder}/{filename}", mode="r", encoding="utf-8") as f:
-                    reading = f.read()
-                    title.append(reading.split("\n")[0])
-                    txt.append(reading)
-                    url.append(f"{domain}{folder}/{filename}")
+                reading = cross.get_news_text(f"{data1}{folder}/{filename}")
+                title.append(reading.split("\n")[0])
+                txt.append(reading)
+                url.append(f"{domain}{folder}/{filename}")
             cr = cross.embed_text(txt)
             sim = np.asarray(cross.get_sim(cr), dtype=np.float32)
             cr = np.asarray(cr, dtype=np.float32)

@@ -15,3 +15,5 @@ torchvision
 torchaudio
 transformers
 sentencepiece
+beautifulsoup4
+lxml

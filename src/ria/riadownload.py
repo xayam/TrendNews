@@ -14,24 +14,6 @@ headers = {
 }
 
 
-def get_news_text(html):
-    r1 = ""
-    result1 = re.findall('class="article__title">(.*?)</', html)
-    if result1:
-        for res in result1:
-            r1 += res + "\n"
-    result1 = re.findall('class="article__announce-text">(.*?)</', html)
-    if result1:
-        for res in result1:
-            r1 += res + "\n"
-    result1 = re.findall('class="article__text">(.*?)</', html)
-    if result1:
-        for res in result1:
-            r1 += res + "\n"
-    clean = re.compile('<.*?>')
-    return re.sub(clean, '', r1)
-
-
 if os.path.exists("data/"):
     data1 = "data/"
 else:
@@ -58,7 +40,7 @@ for day in range(0, count_day + 1):
                     if resp.status_code == 200:
                         with open(newspath,
                                   mode="w", encoding="utf-8") as f:
-                            f.write(get_news_text(str(resp.content, "utf-8")))
+                            f.write(str(resp.content, "utf-8"))
                     else:
                         raise Exception(f"1) resp.StatusCode={resp.status_code}")
         else:

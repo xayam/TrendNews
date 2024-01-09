@@ -6,6 +6,7 @@ from tensorflow_text import SentencepieceTokenizer
 import sklearn.metrics.pairwise
 # from transformers import pipeline, set_seed
 import pprint
+from bs4 import BeautifulSoup
 
 # tokenizer = T5Tokenizer.from_pretrained("t5-base")
 # generator = pipeline(task='text-generation',
@@ -44,6 +45,30 @@ def split_text(text):
     result = re.findall(r"\b[\-цукенгшщзхъфывапролджэячсмитьбю]+\b", text)
     return result
 
+
+def get_news_text(filepath):
+    with open(filepath, mode="r", encoding="utf-8") as f:
+        text = f.read()
+    soup = BeautifulSoup(text, 'lxml')
+    for data in soup(['style', 'script', 'img', 'noindex']):
+        data.decompose()
+    for data in soup.find_all("div", {'class': 'article__meta'}):
+        data.decompose()
+    for data in soup.find_all("div", {'class': 'article__announce'}):
+        data.decompose()
+    for data in soup.find_all("div", {'class': 'article__aggr'}):
+        data.decompose()
+    for data in soup.find_all("div", {'class': 'article__article'}):
+        data.decompose()
+    for _ in soup.find_all('a'):
+        soup.a.unwrap()
+    quote = soup.find_all('div', class_='layout-article__600-align')[0]
+    rep = re.compile('<.*?>')
+    quote = rep.sub("\n", str(quote)).strip()
+    rep = re.compile('\n+')
+    quote = rep.sub("\n", str(quote))
+
+    return quote.replace("\xa0", "&nbsp;")
 
 # def get_keyword_1(question, data):
 #     context = str(data)

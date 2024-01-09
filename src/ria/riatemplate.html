@@ -1,6 +1,6 @@
 <html lang="ru">
 <head>
-    <title>TrendNews</title>
+    <title id="info">TrendNews</title>
     <meta content="text/html; charset=utf-8" http-equiv="Content-type">
     <style>
         body {
@@ -80,6 +80,7 @@
         <label for="year"></label>
         <select id="year">
             <option value="2023">2023</option>
+            <!--
             <option value="2022">2022</option>
             <option value="2021">2021</option>
             <option value="2020">2020</option>
@@ -89,6 +90,7 @@
             <option value="2016">2016</option>
             <option value="2015">2015</option>
             <option value="2014">2014</option>
+            -->
         </select>
         <label for="month"></label>
         <select id="month">
@@ -109,18 +111,24 @@
     </span>
 </div>
 <div id="tooltip">
-    <p>&nbsp;&nbsp;&nbsp;Одинарный клик левой кнопкой мыши - переход к выбранной новости.</p>
-    <p>&nbsp;&nbsp;&nbsp;Двойной клик - открытие новой вкладки с источником новости</p>
-    <p>&nbsp;&nbsp;&nbsp;Для поиска в текущем месяце - введите запрос в соответствующее поле и нажмите кнопку ОК</p>
-    <p>&nbsp;&nbsp;&nbsp;На графике чем правее, тем больше тренд. Чем выше - тем свежее новость.</p>
-    <p>&nbsp;&nbsp;&nbsp;В выпадающем списке можете выбрать месяц и год, если у Вас есть соответствующий файл.</p>
-    <p>&nbsp;&nbsp;&nbsp;Черным цветом показано направление изменения даты и тренда - больше-меньше.</p>
-    <p>&nbsp;&nbsp;&nbsp;Синим цветом написан источник новостей.</p>
-    <p>&nbsp;&nbsp;&nbsp;Красным цветом показано ключевое слово <a id="antitrend" href="" target="_blank">АНТИТРЕНД</a>
-        - анти тренд текущего месяца статья &laquo;<span id="titleantitrend"></span>&raquo;.</p>
-    <p>&nbsp;&nbsp;&nbsp;Зелёным цветом написано ключевое слово <a id="trend" href="" target="_blank">ТРЕНД</a> - тренд
-        текущего месяца статья &laquo;<span id="titletrend"></span>&raquo;.</p>
 </div>
+<script>
+    let tooltip_init =
+        '<p>&nbsp;&nbsp;&nbsp;Одинарный клик левой кнопкой мыши - переход к выбранной новости.</p>\n' +
+        '<p>&nbsp;&nbsp;&nbsp;Двойной клик - открытие новой вкладки с источником новости</p>\n' +
+        '<p>&nbsp;&nbsp;&nbsp;Для поиска в текущем месяце - введите запрос в соответствующее поле и нажмите кнопку ОК</p>\n' +
+        '<p>&nbsp;&nbsp;&nbsp;На графике чем правее, тем больше тренд. Чем выше - тем свежее новость.</p>\n' +
+        '<p>&nbsp;&nbsp;&nbsp;В выпадающем списке можете выбрать месяц и год, если у Вас есть соответствующий файл.</p>\n' +
+        '<p>&nbsp;&nbsp;&nbsp;Черным цветом показано направление изменения даты и тренда - больше-меньше.</p>\n' +
+        '<p>&nbsp;&nbsp;&nbsp;Синим цветом написан источник новостей.</p>\n' +
+        '<p>&nbsp;&nbsp;&nbsp;Красным цветом показано ключевое слово <a id="antitrend" href="" target="_blank">АНТИТРЕНД</a>\n' +
+        ' - анти тренд текущего месяца статья &laquo;<span id="titleantitrend"></span>&raquo;.</p>\n' +
+        '<p>&nbsp;&nbsp;&nbsp;Зелёным цветом написано ключевое слово <a id="trend" href="" target="_blank">ТРЕНД</a> - тренд\n' +
+        'текущего месяца статья &laquo;<span id="titletrend"></span>&raquo;.</p>';
+    let tooltip = document.getElementById('tooltip');
+    tooltip.innerHTML = tooltip_init
+</script>
+
 <script>
     let canvas = document.getElementById("myCanvas");
     canvas.width = 6000;
@@ -132,15 +140,20 @@
     ctx.msImageSmoothingEnabled = false;
     ctx.webkitImageSmoothingEnabled = false;
 
-    let tooltip = document.getElementById('tooltip');
-
+    let info = document.getElementById('info');
     let state = {
         "pointX": 3000,
         "pointY": 500,
         "pointX_": 0,
         "pointY_": 0,
-        "antitrend": 'Антитренд',
-        "trend": 'Тренд',
+        "title": "TrendNews",
+        "antitrend": undefined,
+        "trend": undefined,
+        "antitrendhref": undefined,
+        "trendhref": undefined,
+        "titleantitrend": undefined,
+        "titletrend": undefined,
+        "titledefault": undefined,
         "index": undefined,
     }
 
@@ -223,10 +236,19 @@
         rangedate.value = 1000 - state["pointY"];
         rangetrend.value = state["pointX"];
         if (state["index"] !== undefined) {
+            info.innerText = state["title"]
             let infodate = document.getElementById("infodate");
             infodate.innerText = "текущая дата: " + points[state["index"]]["year"] + "." + points[state["index"]]["month"] + "." + points[state["index"]]["day"];
             let infotrend = document.getElementById("infotrend");
             infotrend.innerText = "текущий тренд: " + (points[state["index"]]["x"] * 100 / 6000).toFixed(2) + "%";
+        } else {
+            info.innerText = state["titledefault"]
+            document.getElementById("antitrend").innerText = state["antitrend"]
+            document.getElementById("antitrend").href = state["antitrendhref"]
+            document.getElementById("titleantitrend").innerText = state["titleantitrend"]
+            document.getElementById("trend").innerText = state["trend"]
+            document.getElementById("trend").href = state["trendhref"]
+            document.getElementById("titletrend").innerText = state["titletrend"]
         }
     }
 
@@ -254,13 +276,9 @@
 
     canvas.addEventListener('click', function (evt) {
         let index = get_index(evt)
-        let url = points[index]["url"];
-        tooltip.innerHTML = "<p>&nbsp;&nbsp;&nbsp;<a id='url' target='_blank' href='" +
-            url + "'>" + url + "</a></p>" + points[index]["info"];
-        state["pointX"] = points[index]["x"];
-        state["pointY"] = points[index]["y"];
-        state["index"] = index
-        update(state);
+        let x = points[index]["x"];
+        let y = points[index]["y"];
+        window.location.href = "#n_" + x + "_" + y
     });
 
     rangedate.addEventListener('change', function () {
@@ -305,16 +323,22 @@
         let scaleY = canvas.height / rect.height;
         let mouseX = x / scaleX + rect.left
         let mouseY = y / scaleY + rect.top
-        canvas.dispatchEvent(
-            new MouseEvent(
-                "click",
-                {
-                    clientX: mouseX,
-                    clientY: mouseY,
-                    bubbles: true
-                }
-            )
-        );
+        let index = get_index(new MouseEvent(
+            "click",
+            {
+                clientX: mouseX,
+                clientY: mouseY,
+                bubbles: true
+            }
+        ));
+        let url = points[index]["url"];
+        tooltip.innerHTML = "<p>&nbsp;&nbsp;&nbsp;<a id='url' target='_blank' href='" +
+            url + "'>" + url + "</a></p>" + points[index]["info"];
+        state["pointX"] = points[index]["x"];
+        state["pointY"] = points[index]["y"];
+        state["index"] = index
+        state["title"] = points[index]["title"];
+        update(state);
     }
 
     canvas.addEventListener('mousemove', function (evt) {
@@ -337,11 +361,23 @@
         window.location.href = preffix + year + month + "01-" + year + month + last.getDate() + ".html";
     });
 
+    function base64ToBytes(base64) {
+        const binString = atob(base64);
+        return Uint8Array.from(binString, (m) => m.codePointAt(0));
+    }
+
+    function bytesToBase64(bytes) {
+        const binString = String.fromCodePoint(...bytes);
+        return btoa(binString);
+    }
+
     let searchinput = document.getElementById("searchinput");
     let find = document.getElementById("find");
     let options = {includeScore: true, keys: ['info']}
-    find.addEventListener('click', function () {
+
+    function fuseSearch(query) {
         let fuse = new Fuse(points, options)
+        info.innerText = "Поиск: " + query
         let result = fuse.search(searchinput.value)
         let html = "<br/>"
         if (result.length > 0) {
@@ -354,7 +390,9 @@
                     "&nbsp;&nbsp;" +
                     (points[result[i]["refIndex"]]["x"] * 100 / 6000).toFixed(2).padStart(5, '0') +
                     "%&nbsp;&nbsp;" +
-                    "<a href='#' onclick='choose(" +
+                    "<a href='#n_" + points[result[i]["refIndex"]]["x"] + "_" +
+                    points[result[i]["refIndex"]]["y"] +
+                    "' onclick='choose(" +
                     points[result[i]["refIndex"]]["x"] + ", " +
                     points[result[i]["refIndex"]]["y"] + ");'>" +
                     points[result[i]["refIndex"]]["title"] + "</a>\n<br/>";
@@ -363,7 +401,45 @@
             html += "Ничего не найдено"
         }
         tooltip.innerHTML = html
+    }
+
+    find.addEventListener('click', function () {
+        let query = searchinput.value
+        let encoded = bytesToBase64(new TextEncoder().encode(query));
+        window.location.href = "#s_" + encoded
     });
+
+    window.onpopstate = (event) => {
+        let href = window.location.href
+        console.log(
+            'location: ' + href + ', event: ' + (event ? event : undefined)
+        );
+        if (href.indexOf('#') > -1) {
+            let end = href.split('#')[1]
+            let params = end.split('_')
+            let task = params[0]
+            if (task === 'n') {
+                let x = params[1]
+                let y = params[2]
+                choose(x, y)
+            } else if (task === 's') {
+                let query = params[1]
+                let decoded = new TextDecoder().decode(base64ToBytes(query));
+                searchinput.value = decoded
+                state["title"] = "Поиск: " + decoded
+                fuseSearch(decoded)
+            }
+        } else {
+            tooltip.innerHTML = tooltip_init
+            state["pointX"] = 3000
+            state["pointY"] = 500
+            state["title"] = state["month"] + " TrendNews"
+            state["index"] = undefined
+            update(state)
+        }
+    };
+
+    window.onpopstate(undefined)
 </script>
 
 </body>

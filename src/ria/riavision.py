@@ -26,22 +26,19 @@ def template2html(data0, year, month, keywords, current, preffix):
                       'day: "' + data[i]["day"] + '", ' + \
                       '},\n'
     output = output[:-2] + '\n];\n'
-    output += 'document.getElementById("antitrend").href = "' + \
+    output += 'state["antitrend"] = "' + keywords[0] + '";\n'
+    output += 'state["antitrendhref"] = "' + \
               data0[current[0]['r']][current[0]['s']]['url'] + '";\n'
-    output += 'document.getElementById("antitrend").innerText = "' + \
-              str(keywords[0]).upper() + '";\n'
-    output += 'document.getElementById("trend").href = "' + \
-              data0[current[1]['r']][current[1]['s']]['url'] + '";\n'
-    output += 'document.getElementById("trend").innerText = "' + \
-              str(keywords[1]).upper() + '";\n'
-    output += 'document.getElementById("titleantitrend").innerText = "' + \
+    output += 'state["titleantitrend"] = "' + \
               data0[current[0]['r']][current[0]['s']]['title'].replace('"', "'") + '";\n'
-    output += 'document.getElementById("titletrend").innerText = "' + \
+    output += 'state["trend"] = "' + keywords[1] + '";\n'
+    output += 'state["trendhref"] = "' + \
+              data0[current[1]['r']][current[1]['s']]['url'] + '";\n'
+    output += 'state["titletrend"] = "' + \
               data0[current[1]['r']][current[1]['s']]['title'].replace('"', "'") + '";\n'
     output += 'document.getElementById("year").value = "' + year + '";\n'
     output += 'document.getElementById("month").value = "' + month + '";\n'
-    output += 'state["antitrend"] = "' + keywords[0] + '";\n'
-    output += 'state["trend"] = "' + keywords[1] + '";\n'
+    output += 'state["titledefault"] = "' + year + '.' + month + ' TrendNews";\n'
     output += 'preffix = "' + preffix + '";\n'
     rep = re.compile("//__POINTS__")
     result = rep.sub(output, result)
