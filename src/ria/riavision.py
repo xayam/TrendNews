@@ -26,6 +26,8 @@ def template2html(data0, year, month, keywords, current, preffix):
                       'day: "' + data[i]["day"] + '", ' + \
                       '},\n'
     output = output[:-2] + '\n];\n'
+    output += 'state["year"] = "' + year + '";\n'
+    output += 'state["month"] = "' + month + '";\n'
     output += 'state["antitrend"] = "' + keywords[0] + '";\n'
     output += 'state["antitrendhref"] = "' + \
               data0[current[0]['r']][current[0]['s']]['url'] + '";\n'

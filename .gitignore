@@ -1,6 +1,7 @@
 .github/
 venv/
 .idea/
+src/ria/.idea/
 .run/
 __pycache__/
 src/__pycache__/

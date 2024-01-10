@@ -58,7 +58,7 @@
         }
     </style>
 </head>
-<body>
+<body onload="window.onpopstate(undefined);">
 <script>
     //__FUSE__
 </script>
@@ -154,6 +154,8 @@
         "titleantitrend": undefined,
         "titletrend": undefined,
         "titledefault": undefined,
+        "year": undefined,
+        "month": undefined,
         "index": undefined,
     }
 
@@ -233,6 +235,8 @@
             ctx.strokeStyle = i["color"];
             ctx.stroke();
         }
+        document.getElementById("year").value = state["year"];
+        document.getElementById("month").value = state["month"];
         rangedate.value = 1000 - state["pointY"];
         rangetrend.value = state["pointX"];
         if (state["index"] !== undefined) {
@@ -401,6 +405,7 @@
             html += "Ничего не найдено"
         }
         tooltip.innerHTML = html
+        update(state)
     }
 
     find.addEventListener('click', function () {
@@ -428,6 +433,8 @@
                 searchinput.value = decoded
                 state["title"] = "Поиск: " + decoded
                 fuseSearch(decoded)
+            } else {
+                window.location.href = "#"
             }
         } else {
             tooltip.innerHTML = tooltip_init
@@ -438,8 +445,6 @@
             update(state)
         }
     };
-
-    window.onpopstate(undefined)
 </script>
 
 </body>
