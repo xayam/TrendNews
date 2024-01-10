@@ -7,13 +7,9 @@ import numpy as np
 from datetime import datetime, timedelta
 import pymorphy2
 
+from riaconfig import *
 import riacross as cross
 import riavision as vision
-
-version = "v2.4"
-site = "ria.ru"
-preffix = f"TrendNews-{version}-{site}-"
-domain = f"https://{site}/"
 
 years = [str(a) for a in range(2023, 2022, -1)]
 months = [str(b).rjust(2, '0') for b in range(12, 0, -1)]

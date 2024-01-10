@@ -3,8 +3,8 @@ import re
 import requests
 from datetime import date, timedelta
 
-count_day = 366 * 10 + 10
-domain = "https://ria.ru/sitemap_article.xml?"
+from riaconfig import *
+
 
 headers = {
     "User-Agent":
@@ -26,7 +26,7 @@ for day in range(0, count_day + 1):
     if not os.path.exists(path):
         os.mkdir(path)
     try:
-        direct_link = f"{domain}date_start={yesterday}&date_end={yesterday}"
+        direct_link = f"{domain_download}date_start={yesterday}&date_end={yesterday}"
         resp = requests.get(direct_link, timeout=3, verify=False, headers=headers)
         if resp.status_code == 200:
             result = re.findall("<loc>(.*?)</loc>", str(resp.content))
