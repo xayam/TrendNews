@@ -337,7 +337,7 @@
         state["pointX_"] = points[index]["x"];
         state["pointY_"] = points[index]["y"];
         let date = points[index]["year"] + "." +
-                   points[index]["month"] + "." + points[index]["day"];
+            points[index]["month"] + "." + points[index]["day"];
         let trend = (points[index]["x"] * 100 / 6000).toFixed(2) + "%";
         canvas.title = date + " " + trend;
         update(state);
@@ -371,27 +371,70 @@
     let find = document.getElementById("find");
     let options = {includeScore: true, keys: ['info']};
 
-    function fuseSearch(query) {
+    function fuseSearch(query, col, sort) {
         let fuse = new Fuse(points, options);
+        let encoded = bytesToBase64(new TextEncoder().encode(query));
         info.innerText = "Поиск: " + query;
         let result = fuse.search(searchinput.value);
         let html = "<br/>";
         if (result.length > 0) {
-            for (let i = 0; i < result.length; i++) {
-                html += "&nbsp;&nbsp;&nbsp;" + (1 - result[i]["score"]).toFixed(4) +
+            let sorted = result.slice(0);
+            sorted.sort(function (a, b) {
+                let x;
+                let y;
+                if (col === 'd') {
+                    x = a.item.year + a.item.month + a.item.day;
+                    y = b.item.year + b.item.month + b.item.day;
+                } else if (col === "h") {
+                    x = a.item.title.toLowerCase();
+                    y = b.item.title.toLowerCase();
+                } else if (col === "t") {
+                    x = (a.item.x * 100 / 6000).toFixed(2).padStart(6, '0')
+                    y = (b.item.x * 100 / 6000).toFixed(2).padStart(6, '0')
+                } else if (col === "r") {
+                    x = a.score.toFixed(6).toString();
+                    y = b.score.toFixed(6).toString();
+                } else {
+                    window.location.href = "#s_" + encoded + "_" + "r_" + sort;
+                }
+                if (sort === '0') {
+                    return x < y ? -1 : x > y ? 1 : 0;
+                } else if (sort === '1') {
+                    return x > y ? -1 : x < y ? 1 : 0;
+                } else {
+                    window.location.href = "#s_" + encoded + "_" + "r_0";
+                }
+            });
+            for (let i = 0; i < sorted.length; i++) {
+                if (i === 0) {
+                    html += "&nbsp;&nbsp;&nbsp;Упорядочить по: релевантности " +
+                        "<a href='#s_" + encoded + "_r_1'>&#8593;</a> " +
+                        "<a href='#s_" + encoded + "_r_0'>&#8595;</a> " +
+                        ", дате " +
+                        "<a href='#s_" + encoded + "_d_0'>&#8593;</a> " +
+                        "<a href='#s_" + encoded + "_d_1'>&#8595;</a> " +
+                        ", тренду " +
+                        "<a href='#s_" + encoded + "_t_0'>&#8593;</a> " +
+                        "<a href='#s_" + encoded + "_t_1'>&#8595;</a> " +
+                        ", заголовку " +
+                        "<a href='#s_" + encoded + "_h_0'>&#8593;</a> " +
+                        "<a href='#s_" + encoded + "_h_1'>&#8595;</a> " +
+                        "<br/>";
+                }
+                html += "&nbsp;&nbsp;&nbsp;" + (1 - sorted[i]["score"]).toFixed(4) +
                     "&nbsp;&nbsp;" +
-                    points[result[i]["refIndex"]]["year"] + "." +
-                    points[result[i]["refIndex"]]["month"] + "." +
-                    points[result[i]["refIndex"]]["day"] +
+                    points[sorted[i]["refIndex"]]["year"] + "." +
+                    points[sorted[i]["refIndex"]]["month"] + "." +
+                    points[sorted[i]["refIndex"]]["day"] +
                     "&nbsp;&nbsp;" +
-                    (points[result[i]["refIndex"]]["x"] * 100 / 6000).toFixed(2).padStart(5, '0') +
+                    (points[sorted[i]["refIndex"]]["x"] * 100 / 6000).toFixed(2).padStart(6, '0') +
                     "%&nbsp;&nbsp;" +
-                    "<a href='#n_" + points[result[i]["refIndex"]]["x"] + "_" +
-                    points[result[i]["refIndex"]]["y"] +
+                    "<a href='#n_" + points[sorted[i]["refIndex"]]["x"] + "_" +
+                    points[sorted[i]["refIndex"]]["y"] +
                     "' onclick='choose(" +
-                    points[result[i]["refIndex"]]["x"] + ", " +
-                    points[result[i]["refIndex"]]["y"] + ");'>" +
-                    points[result[i]["refIndex"]]["title"] + "</a>\n<br/>";
+                    points[sorted[i]["refIndex"]]["x"] + ", " +
+                    points[sorted[i]["refIndex"]]["y"] + ");'>" +
+                    points[sorted[i]["refIndex"]]["title"] + "</a>\n<br/>";
             }
         } else {
             html += "Ничего не найдено";
@@ -403,7 +446,7 @@
     find.addEventListener('click', function () {
         let query = searchinput.value;
         let encoded = bytesToBase64(new TextEncoder().encode(query));
-        window.location.href = "#s_" + encoded;
+        window.location.href = "#s_" + encoded + "_r_0";
     });
 
     function loaddefault() {
@@ -428,18 +471,32 @@
             let end = href.split('#')[1];
             let params = end.split('_');
             let task = params[0];
-            if (task === 'n') {
-                let x = params[1];
-                let y = params[2];
-                choose(x, y);
-            } else if (task === 's') {
-                let query = params[1];
-                let decoded = new TextDecoder().decode(base64ToBytes(query));
-                searchinput.value = decoded;
-                state["title"] = "Поиск: " + decoded;
-                fuseSearch(decoded);
+            if (task) {
+                if (task === 'n') {
+                    let x = parseFloat(params[1]).toString();
+                    let y = parseFloat(params[2]).toString();
+                    if (x && y) {
+                        choose(x, y);
+                    } else {
+                        window.location.href = "";
+                    }
+                } else if (task === 's') {
+                    let query = params[1];
+                    let col = params[2]
+                    let sort = params[3]
+                    let decoded = new TextDecoder().decode(base64ToBytes(query));
+                    if (['t', 'h', 'r', 'd'].includes(col) && ['0', '1'].includes(sort)) {
+                        searchinput.value = decoded;
+                        state["title"] = "Поиск: " + decoded;
+                        fuseSearch(decoded, col, sort);
+                    } else {
+                        window.location.href = "";
+                    }
+                } else {
+                    window.location.href = "";
+                }
             } else {
-                loaddefault();
+                window.location.href = "";
             }
         } else {
             loaddefault();
