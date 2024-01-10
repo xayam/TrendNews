@@ -148,6 +148,7 @@
         "pointY_": 0,
         "title": undefined,
         "name": undefined,
+        "site": undefined,
         "hint": undefined,
         "antitrend": undefined,
         "trend": undefined,
@@ -177,7 +178,7 @@
 
         ctx.font = "300px serif";
         ctx.fillStyle = "#0000ff";
-        ctx.fillText("RIA.RU", 2700, 500);
+        ctx.fillText(state["site"].toUpperCase(), 2700, 500);
         ctx.font = "200px serif";
         ctx.fillStyle = "#000000";
         ctx.fillText("Дата", 0, 500);

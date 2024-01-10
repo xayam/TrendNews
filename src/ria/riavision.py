@@ -29,6 +29,7 @@ def template2html(data0, year, month, keywords, current, config):
     output += 'state["year"] = "' + year + '";\n'
     output += 'state["month"] = "' + month + '";\n'
     output += 'state["name"] = "' + config['name'] + '";\n'
+    output += 'state["site"] = "' + config['site'] + '";\n'
     output += 'state["antitrend"] = "' + keywords[0] + '";\n'
     output += 'state["antitrendhref"] = "' + \
               data0[current[0]['r']][current[0]['s']]['url'] + '";\n'
