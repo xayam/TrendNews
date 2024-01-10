@@ -11,14 +11,6 @@ from riaconfig import *
 import riacross as cross
 import riavision as vision
 
-years = [str(a) for a in range(2023, 2022, -1)]
-months = [str(b).rjust(2, '0') for b in range(12, 0, -1)]
-days = [str(c).rjust(2, '0') for c in range(31, 0, -1)]
-all_months = ["январь", "февраль", "март", "апрель", "май", "июнь",
-              "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь"]
-all_days = ["понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"]
-all_stop = ["россия", "сми", "ростёха"]
-
 extractor1 = yake.KeywordExtractor(lan="ru", n=1, dedupLim=0.3, top=1)
 extractor10 = yake.KeywordExtractor(lan="ru", n=1, dedupLim=0.3, top=10)
 morph = pymorphy2.MorphAnalyzer()
