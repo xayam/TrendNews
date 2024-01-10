@@ -161,6 +161,8 @@
 
     let rangedate = document.getElementById("rangedate");
     let rangetrend = document.getElementById("rangetrend");
+    let infodate = document.getElementById("infodate");
+    let infotrend = document.getElementById("infotrend");
     let points;
     let preffix;
 
@@ -241,11 +243,9 @@
         rangetrend.value = state["pointX"];
         if (state["index"] !== undefined) {
             info.innerText = state["title"];
-            let infodate = document.getElementById("infodate");
             infodate.innerText = "Текущая дата: " +
                 points[state["index"]]["year"] + "." +
                 points[state["index"]]["month"] + "." + points[state["index"]]["day"];
-            let infotrend = document.getElementById("infotrend");
             infotrend.innerText = "Текущий тренд: " +
                 (points[state["index"]]["x"] * 100 / 6000).toFixed(2) + "%";
         } else {
@@ -423,6 +423,8 @@
         state["pointX"] = 3000;
         state["pointY"] = 500;
         state["title"] = state["month"] + " TrendNews";
+        infodate.innerText = "Текущая дата: ?";
+        infotrend.innerText = "Текущий тренд: ?";
         state["index"] = undefined;
         update(state);
     }
