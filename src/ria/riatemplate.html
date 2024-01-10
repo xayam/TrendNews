@@ -58,7 +58,7 @@
         }
     </style>
 </head>
-<body onload="window.onpopstate(undefined);">
+<body onload="load(undefined);">
 <script>
     //__FUSE__
 </script>
@@ -126,7 +126,7 @@
         '<p>&nbsp;&nbsp;&nbsp;Зелёным цветом написано ключевое слово <a id="trend" href="" target="_blank">ТРЕНД</a> - тренд\n' +
         'текущего месяца статья &laquo;<span id="titletrend"></span>&raquo;.</p>';
     let tooltip = document.getElementById('tooltip');
-    tooltip.innerHTML = tooltip_init
+    tooltip.innerHTML = tooltip_init;
 </script>
 
 <script>
@@ -157,12 +157,12 @@
         "year": undefined,
         "month": undefined,
         "index": undefined,
-    }
+    };
 
     let rangedate = document.getElementById("rangedate");
     let rangetrend = document.getElementById("rangetrend");
-    let points
-    let preffix
+    let points;
+    let preffix;
 
     //__POINTS__
 
@@ -218,7 +218,7 @@
         ctx.fillText(state["trend"], 4000, 500);
         let current = [{"x1": state["pointX"], "y1": state["pointY"], "color": "#009900"},
             {"x1": state["pointX_"], "y1": state["pointY_"], "color": "#999999"}
-        ]
+        ];
         for (let j = 0; j < 2; j++) {
             let i = current[j]
             ctx.beginPath();
@@ -240,23 +240,26 @@
         rangedate.value = 1000 - state["pointY"];
         rangetrend.value = state["pointX"];
         if (state["index"] !== undefined) {
-            info.innerText = state["title"]
+            info.innerText = state["title"];
             let infodate = document.getElementById("infodate");
-            infodate.innerText = "текущая дата: " + points[state["index"]]["year"] + "." + points[state["index"]]["month"] + "." + points[state["index"]]["day"];
+            infodate.innerText = "текущая дата: " +
+                points[state["index"]]["year"] + "." +
+                points[state["index"]]["month"] + "." + points[state["index"]]["day"];
             let infotrend = document.getElementById("infotrend");
-            infotrend.innerText = "текущий тренд: " + (points[state["index"]]["x"] * 100 / 6000).toFixed(2) + "%";
+            infotrend.innerText = "текущий тренд: " +
+                (points[state["index"]]["x"] * 100 / 6000).toFixed(2) + "%";
         } else {
-            info.innerText = state["titledefault"]
-            document.getElementById("antitrend").innerText = state["antitrend"]
-            document.getElementById("antitrend").href = state["antitrendhref"]
-            document.getElementById("titleantitrend").innerText = state["titleantitrend"]
-            document.getElementById("trend").innerText = state["trend"]
-            document.getElementById("trend").href = state["trendhref"]
-            document.getElementById("titletrend").innerText = state["titletrend"]
+            info.innerText = state["titledefault"];
+            document.getElementById("antitrend").innerText = state["antitrend"];
+            document.getElementById("antitrend").href = state["antitrendhref"];
+            document.getElementById("titleantitrend").innerText = state["titleantitrend"];
+            document.getElementById("trend").innerText = state["trend"];
+            document.getElementById("trend").href = state["trendhref"];
+            document.getElementById("titletrend").innerText = state["titletrend"];
         }
     }
 
-    update(state)
+    update(state);
 
     function get_index(evt) {
         let rect = canvas.getBoundingClientRect();
@@ -264,33 +267,33 @@
         let scaleY = canvas.height / rect.height;
         let mouseX = (evt.clientX - rect.left) * scaleX;
         let mouseY = (evt.clientY - rect.top) * scaleY;
-        let minimum = 1000000
-        let index = 0
+        let minimum = 1000000;
+        let index = 0;
         for (let i = 0; i < points.length; i++) {
-            let x = points[i]["x"]
-            let y = points[i]["y"]
-            let distance = ((mouseX - x) ** 2 + (mouseY - y) ** 2) ** 0.5
+            let x = points[i]["x"];
+            let y = points[i]["y"];
+            let distance = ((mouseX - x) ** 2 + (mouseY - y) ** 2) ** 0.5;
             if (distance < minimum) {
                 minimum = distance
                 index = i
             }
         }
-        return index
+        return index;
     }
 
     canvas.addEventListener('click', function (evt) {
-        let index = get_index(evt)
+        let index = get_index(evt);
         let x = points[index]["x"];
         let y = points[index]["y"];
-        window.location.href = "#n_" + x + "_" + y
+        window.location.href = "#n_" + x + "_" + y;
     });
 
     rangedate.addEventListener('change', function () {
         let rect = canvas.getBoundingClientRect();
         let scaleX = canvas.width / rect.width;
         let scaleY = canvas.height / rect.height;
-        let mouseX = state["pointX"] / scaleX + rect.left
-        let mouseY = (1000 - rangedate.value) / scaleY + rect.top
+        let mouseX = state["pointX"] / scaleX + rect.left;
+        let mouseY = (1000 - rangedate.value) / scaleY + rect.top;
         canvas.dispatchEvent(
             new MouseEvent(
                 "click",
@@ -307,8 +310,8 @@
         let rect = canvas.getBoundingClientRect();
         let scaleX = canvas.width / rect.width;
         let scaleY = canvas.height / rect.height;
-        let mouseX = rangetrend.value / scaleX + rect.left
-        let mouseY = state["pointY"] / scaleY + rect.top
+        let mouseX = rangetrend.value / scaleX + rect.left;
+        let mouseY = state["pointY"] / scaleY + rect.top;
         canvas.dispatchEvent(
             new MouseEvent(
                 "click",
@@ -325,8 +328,8 @@
         let rect = canvas.getBoundingClientRect();
         let scaleX = canvas.width / rect.width;
         let scaleY = canvas.height / rect.height;
-        let mouseX = x / scaleX + rect.left
-        let mouseY = y / scaleY + rect.top
+        let mouseX = x / scaleX + rect.left;
+        let mouseY = y / scaleY + rect.top;
         let index = get_index(new MouseEvent(
             "click",
             {
@@ -340,7 +343,7 @@
             url + "'>" + url + "</a></p>" + points[index]["info"];
         state["pointX"] = points[index]["x"];
         state["pointY"] = points[index]["y"];
-        state["index"] = index
+        state["index"] = index;
         state["title"] = points[index]["title"];
         update(state);
     }
@@ -362,7 +365,8 @@
         let year = document.getElementById("year").value;
         let month = document.getElementById("month").value;
         let last = new Date(year, month, 0);
-        window.location.href = preffix + year + month + "01-" + year + month + last.getDate() + ".html";
+        window.location.href = preffix + year + month + "01-" +
+            year + month + last.getDate() + ".html";
     });
 
     function base64ToBytes(base64) {
@@ -377,13 +381,13 @@
 
     let searchinput = document.getElementById("searchinput");
     let find = document.getElementById("find");
-    let options = {includeScore: true, keys: ['info']}
+    let options = {includeScore: true, keys: ['info']};
 
     function fuseSearch(query) {
-        let fuse = new Fuse(points, options)
-        info.innerText = "Поиск: " + query
-        let result = fuse.search(searchinput.value)
-        let html = "<br/>"
+        let fuse = new Fuse(points, options);
+        info.innerText = "Поиск: " + query;
+        let result = fuse.search(searchinput.value);
+        let html = "<br/>";
         if (result.length > 0) {
             for (let i = 0; i < result.length; i++) {
                 html += "&nbsp;&nbsp;&nbsp;" + (1 - result[i]["score"]).toFixed(4) +
@@ -402,50 +406,57 @@
                     points[result[i]["refIndex"]]["title"] + "</a>\n<br/>";
             }
         } else {
-            html += "Ничего не найдено"
+            html += "Ничего не найдено";
         }
-        tooltip.innerHTML = html
-        update(state)
+        tooltip.innerHTML = html;
+        update(state);
     }
 
     find.addEventListener('click', function () {
-        let query = searchinput.value
+        let query = searchinput.value;
         let encoded = bytesToBase64(new TextEncoder().encode(query));
-        window.location.href = "#s_" + encoded
+        window.location.href = "#s_" + encoded;
     });
 
-    window.onpopstate = (event) => {
-        let href = window.location.href
+    function loaddefault() {
+        tooltip.innerHTML = tooltip_init;
+        state["pointX"] = 3000;
+        state["pointY"] = 500;
+        state["title"] = state["month"] + " TrendNews";
+        state["index"] = undefined;
+        update(state);
+    }
+
+    function load(event) {
+        let href = window.location.href;
         console.log(
             'location: ' + href + ', event: ' + (event ? event : undefined)
         );
         if (href.indexOf('#') > -1) {
-            let end = href.split('#')[1]
-            let params = end.split('_')
-            let task = params[0]
+            let end = href.split('#')[1];
+            let params = end.split('_');
+            let task = params[0];
             if (task === 'n') {
-                let x = params[1]
-                let y = params[2]
-                choose(x, y)
+                let x = params[1];
+                let y = params[2];
+                choose(x, y);
             } else if (task === 's') {
-                let query = params[1]
+                let query = params[1];
                 let decoded = new TextDecoder().decode(base64ToBytes(query));
-                searchinput.value = decoded
-                state["title"] = "Поиск: " + decoded
-                fuseSearch(decoded)
+                searchinput.value = decoded;
+                state["title"] = "Поиск: " + decoded;
+                fuseSearch(decoded);
             } else {
-                window.location.href = "#"
+                loaddefault();
             }
         } else {
-            tooltip.innerHTML = tooltip_init
-            state["pointX"] = 3000
-            state["pointY"] = 500
-            state["title"] = state["month"] + " TrendNews"
-            state["index"] = undefined
-            update(state)
+            loaddefault();
         }
+    }
+
+    window.onpopstate = (event) => {
+        load(event);
     };
 </script>
-
 </body>
 </html>
