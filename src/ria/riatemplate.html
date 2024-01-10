@@ -163,6 +163,8 @@
     let rangetrend = document.getElementById("rangetrend");
     let infodate = document.getElementById("infodate");
     let infotrend = document.getElementById("infotrend");
+    let year = document.getElementById("year");
+    let month = document.getElementById("month");
     let points;
     let preffix;
 
@@ -237,8 +239,8 @@
             ctx.strokeStyle = i["color"];
             ctx.stroke();
         }
-        document.getElementById("year").value = state["year"];
-        document.getElementById("month").value = state["month"];
+        year.value = state["year"];
+        month.value = state["month"];
         rangedate.value = 1000 - state["pointY"];
         rangetrend.value = state["pointX"];
         if (state["index"] !== undefined) {
@@ -430,6 +432,8 @@
     }
 
     function load(event) {
+        year.value = state["year"];
+        month.value = state["month"];
         let href = window.location.href;
         console.log(
             'location: ' + href + ', event: ' + (event ? event : undefined)
