@@ -1,7 +1,7 @@
 import re
 
 
-def template2html(data0, year, month, keywords, current, preffix):
+def template2html(data0, year, month, keywords, current, config):
     with open(f"riatemplate.html", mode="r", encoding="utf-8") as f:
         template = f.read()
     with open(f"fuse.js", mode="r", encoding="utf-8") as f:
@@ -28,6 +28,7 @@ def template2html(data0, year, month, keywords, current, preffix):
     output = output[:-2] + '\n];\n'
     output += 'state["year"] = "' + year + '";\n'
     output += 'state["month"] = "' + month + '";\n'
+    output += 'state["name"] = "' + config['name'] + '";\n'
     output += 'state["antitrend"] = "' + keywords[0] + '";\n'
     output += 'state["antitrendhref"] = "' + \
               data0[current[0]['r']][current[0]['s']]['url'] + '";\n'
@@ -40,11 +41,12 @@ def template2html(data0, year, month, keywords, current, preffix):
               data0[current[1]['r']][current[1]['s']]['title'].replace('"', "'") + '";\n'
     output += 'document.getElementById("year").value = "' + year + '";\n'
     output += 'document.getElementById("month").value = "' + month + '";\n'
-    output += 'state["titledefault"] = "' + year + '.' + month + ' TrendNews";\n'
-    output += 'preffix = "' + preffix + '";\n'
+    output += 'state["titledefault"] = "' + year + '.' + month + ' ' + \
+              config['name'] + '";\n'
+    output += 'preffix = "' + config["preffix"] + '";\n'
     rep = re.compile("//__POINTS__")
     result = rep.sub(output, result)
-    with open(f"../{preffix}{data0[-1][-1]['url'].split('/')[-2]}-" +
+    with open(f"../{config['preffix']}{data0[-1][-1]['url'].split('/')[-2]}-" +
               f"{data0[0][0]['url'].split('/')[-2]}.html",
               mode="w", encoding="utf-8") as f:
         f.write(result)

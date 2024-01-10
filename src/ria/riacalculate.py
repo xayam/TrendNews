@@ -126,7 +126,13 @@ for year in years:
             'month': month,
             'keywords': keywords,
             'current': current,
-            'preffix': preffix
+            'config': {
+                "version": version,
+                "site": site,
+                "name": name,
+                "preffix": preffix,
+                "domain": domain
+            }
         }
         vision.template2html(**params)
         all_index.append(params)

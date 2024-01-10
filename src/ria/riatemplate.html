@@ -1,6 +1,6 @@
 <html lang="ru">
 <head>
-    <title id="info">TrendNews</title>
+    <title id="info"></title>
     <meta content="text/html; charset=utf-8" http-equiv="Content-type">
     <style>
         body {
@@ -146,7 +146,8 @@
         "pointY": 500,
         "pointX_": 0,
         "pointY_": 0,
-        "title": "TrendNews",
+        "title": undefined,
+        "name": undefined,
         "hint": undefined,
         "antitrend": undefined,
         "trend": undefined,
@@ -427,7 +428,7 @@
         tooltip.innerHTML = tooltip_init;
         state["pointX"] = 3000;
         state["pointY"] = 500;
-        state["title"] = state["month"] + " TrendNews";
+        state["title"] = state["month"] + " " + state["name"];
         infodate.innerText = "Текущая дата: ?";
         infotrend.innerText = "Текущий тренд: ?";
         state["index"] = undefined;

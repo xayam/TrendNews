@@ -2,7 +2,8 @@
 # for riacalculate.py
 version = "v2.4"
 site = "ria.ru"
-preffix = f"TrendNews-{version}-{site}-"
+name = "TrendNews"
+preffix = f"{name}-{version}-{site}-"
 domain = f"https://{site}/"
 
 years = [str(a) for a in range(2023, 2022, -1)]
