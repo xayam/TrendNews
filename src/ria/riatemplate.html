@@ -350,11 +350,11 @@
 
     let ok = document.getElementById("ok");
     ok.addEventListener('click', function () {
-        let year = document.getElementById("year").value;
-        let month = document.getElementById("month").value;
-        let last = new Date(year, month, 0);
-        window.location.href = preffix + year + month + "01-" +
-            year + month + last.getDate() + ".html";
+        let year1 = year.value;
+        let month1 = month.value;
+        let last = new Date(year1, month1, 0);
+        window.location.href = preffix + year1 + month1 + "01-" +
+            year1 + month1 + last.getDate() + ".html";
     });
 
     function base64ToBytes(base64) {
