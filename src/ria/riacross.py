@@ -65,6 +65,7 @@ def get_news_text(filepath):
     quote = soup.find_all('div', class_='layout-article__600-align')[0]
     rep = re.compile('<.*?>')
     quote = rep.sub("\n", str(quote)).strip()
+    quote = quote.replace("«\n", "\n")
     rep = re.compile('\n+')
     quote = rep.sub("\n", str(quote))
 

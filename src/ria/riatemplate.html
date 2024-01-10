@@ -231,11 +231,10 @@
             let trend = (points[state["index"]]["x"] * 100 / 6000).toFixed(2) + "%";
             infodate.innerText = "Текущая дата: " + date;
             infotrend.innerText = "Текущий тренд: " + trend;
-            canvas.title = date + " " + trend
         } else {
             info.innerText = state["titledefault"];
-            canvas.title = ""
-                document.getElementById("antitrend").innerText = state["antitrend"];
+            canvas.title = "";
+            document.getElementById("antitrend").innerText = state["antitrend"];
             document.getElementById("antitrend").href = state["antitrendhref"];
             document.getElementById("titleantitrend").innerText = state["titleantitrend"];
             document.getElementById("trend").innerText = state["trend"];
@@ -337,6 +336,10 @@
         let index = get_index(evt)
         state["pointX_"] = points[index]["x"];
         state["pointY_"] = points[index]["y"];
+        let date = points[index]["year"] + "." +
+                   points[index]["month"] + "." + points[index]["day"];
+        let trend = (points[index]["x"] * 100 / 6000).toFixed(2) + "%";
+        canvas.title = date + " " + trend;
         update(state);
     });
 

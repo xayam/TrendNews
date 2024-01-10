@@ -14,6 +14,7 @@
 - Upgrade pip, run command "python.exe -m pip install -upgrade pip"
 - Install requirements, run command "pip install -r requirements.txt"
 - Create folder src/ria/data
+- Edit the file src/ria/riaconfig.py as you need
 - Run "python.exe src/ria/riadownload.py"
 - Waiting finished
 - Run "python.exe src/riacalculate.py"
