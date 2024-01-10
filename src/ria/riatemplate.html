@@ -65,8 +65,8 @@
 <div id="container">
     <canvas id="myCanvas"></canvas>
 
-    <span id="infodate">текущая дата: ?</span>
-    <span id="infotrend">текущий тренд: ?</span>
+    <span id="infodate">Текущая дата: ?</span>
+    <span id="infotrend">Текущий тренд: ?</span>
 
     <label for="rangedate"></label><input id="rangedate" type="range" min="0" max="1000" step="1" value="500">
     <label for="rangetrend"></label><input id="rangetrend" type="range" min="0" max="6000" step="1" value="3000">
@@ -242,11 +242,11 @@
         if (state["index"] !== undefined) {
             info.innerText = state["title"];
             let infodate = document.getElementById("infodate");
-            infodate.innerText = "текущая дата: " +
+            infodate.innerText = "Текущая дата: " +
                 points[state["index"]]["year"] + "." +
                 points[state["index"]]["month"] + "." + points[state["index"]]["day"];
             let infotrend = document.getElementById("infotrend");
-            infotrend.innerText = "текущий тренд: " +
+            infotrend.innerText = "Текущий тренд: " +
                 (points[state["index"]]["x"] * 100 / 6000).toFixed(2) + "%";
         } else {
             info.innerText = state["titledefault"];
