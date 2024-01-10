@@ -30,11 +30,11 @@ def template2html(data0, year, month, keywords, current, config):
     sy = ""
     for y in years:
         sy += f'<option value="{y}">{y}</option>'
-    output += 'year.innerHTML = "' + sy + '";\n'
+    output += f"year.innerHTML = '{sy}';\n"
     sm = ""
     for m in range(len(months)):
-        sm += f'<option value="{months[m]}">{all_months[m]}</option>'
-    output += 'month.innerHTML = "' + sm + '";\n'
+        sm += f'<option value="{months[len(months)-1-m]}">{all_months[m]}</option>'
+    output += f"month.innerHTML = '{sm}';\n"
     output += 'state["year"] = "' + year + '";\n'
     output += 'state["month"] = "' + month + '";\n'
     output += 'state["name"] = "' + config['name'] + '";\n'
