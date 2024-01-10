@@ -1,4 +1,5 @@
 import re
+from riaconfig import years, months, all_months
 
 
 def template2html(data0, year, month, keywords, current, config):
@@ -26,6 +27,14 @@ def template2html(data0, year, month, keywords, current, config):
                       'day: "' + data[i]["day"] + '", ' + \
                       '},\n'
     output = output[:-2] + '\n];\n'
+    sy = ""
+    for y in years:
+        sy += f'<option value="{y}">{y}</option>'
+    output += 'year.innerHTML = "' + sy + '";\n'
+    sm = ""
+    for m in range(len(months)):
+        sm += f'<option value="{months[m]}">{all_months[m]}</option>'
+    output += 'month.innerHTML = "' + sm + '";\n'
     output += 'state["year"] = "' + year + '";\n'
     output += 'state["month"] = "' + month + '";\n'
     output += 'state["name"] = "' + config['name'] + '";\n'
@@ -40,10 +49,9 @@ def template2html(data0, year, month, keywords, current, config):
               data0[current[1]['r']][current[1]['s']]['url'] + '";\n'
     output += 'state["titletrend"] = "' + \
               data0[current[1]['r']][current[1]['s']]['title'].replace('"', "'") + '";\n'
-    output += 'document.getElementById("year").value = "' + year + '";\n'
-    output += 'document.getElementById("month").value = "' + month + '";\n'
-    output += 'state["titledefault"] = "' + year + '.' + month + ' ' + \
-              config['name'] + '";\n'
+    output += 'year.value = state["year"];\n'
+    output += 'month.value = state["month"];\n'
+    output += 'state["titledefault"] = state["year"] + "." + state["month"] + " " + state["name"];\n'
     output += 'preffix = "' + config["preffix"] + '";\n'
     rep = re.compile("//__POINTS__")
     result = rep.sub(output, result)
