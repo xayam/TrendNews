@@ -147,6 +147,7 @@
         "pointX_": 0,
         "pointY_": 0,
         "title": "TrendNews",
+        "hint": undefined,
         "antitrend": undefined,
         "trend": undefined,
         "antitrendhref": undefined,
@@ -245,14 +246,16 @@
         rangetrend.value = state["pointX"];
         if (state["index"] !== undefined) {
             info.innerText = state["title"];
-            infodate.innerText = "Текущая дата: " +
-                points[state["index"]]["year"] + "." +
+            let date = points[state["index"]]["year"] + "." +
                 points[state["index"]]["month"] + "." + points[state["index"]]["day"];
-            infotrend.innerText = "Текущий тренд: " +
-                (points[state["index"]]["x"] * 100 / 6000).toFixed(2) + "%";
+            let trend = (points[state["index"]]["x"] * 100 / 6000).toFixed(2) + "%";
+            infodate.innerText = "Текущая дата: " + date;
+            infotrend.innerText = "Текущий тренд: " + trend;
+            canvas.title = date + " " + trend
         } else {
             info.innerText = state["titledefault"];
-            document.getElementById("antitrend").innerText = state["antitrend"];
+            canvas.title = ""
+                document.getElementById("antitrend").innerText = state["antitrend"];
             document.getElementById("antitrend").href = state["antitrendhref"];
             document.getElementById("titleantitrend").innerText = state["titleantitrend"];
             document.getElementById("trend").innerText = state["trend"];
