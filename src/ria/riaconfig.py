@@ -1,6 +1,6 @@
 
 # for riacalculate.py
-version = "v2.4"
+version = "v2.5"
 site = "ria.ru"
 name = "TrendNews"
 preffix = f"{name}-{version}-{site}-"

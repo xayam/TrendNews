@@ -79,6 +79,8 @@ for year in years:
             txt0 = []
             all_words = {}
             for r in range(len(result) - 1, -1, -1):
+                if result[r][s]['txt'].count("\n") < 2:
+                    continue
                 txt1 = []
                 text = result[r][s]['title'].lower()
                 ws = cross.split_text(text=text)

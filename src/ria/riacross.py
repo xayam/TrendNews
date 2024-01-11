@@ -66,6 +66,7 @@ def get_news_text(filepath):
     rep = re.compile('<.*?>')
     quote = rep.sub("\n", str(quote)).strip()
     quote = quote.replace("«\n", "\n")
+    quote = quote.replace(" \n", "\n")
     rep = re.compile('\n+')
     quote = rep.sub("\n", str(quote))
 

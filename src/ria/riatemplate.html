@@ -233,7 +233,6 @@
             infotrend.innerText = "Текущий тренд: " + trend;
         } else {
             info.innerText = state["titledefault"];
-            canvas.title = "";
             document.getElementById("antitrend").innerText = state["antitrend"];
             document.getElementById("antitrend").href = state["antitrendhref"];
             document.getElementById("titleantitrend").innerText = state["titleantitrend"];
@@ -419,7 +418,7 @@
                         ", заголовку " +
                         "<a href='#s_" + encoded + "_h_0'>&#8593;</a> " +
                         "<a href='#s_" + encoded + "_h_1'>&#8595;</a> " +
-                        "<br/>";
+                        "<br/><br/>\n";
                 }
                 html += "&nbsp;&nbsp;&nbsp;" + (1 - sorted[i]["score"]).toFixed(4) +
                     "&nbsp;&nbsp;" +
