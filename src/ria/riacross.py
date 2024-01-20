@@ -3,7 +3,7 @@ import numpy as np
 import tensorflow as tf
 import tensorflow_hub as hub
 from tensorflow_text import SentencepieceTokenizer
-import sklearn.metrics.pairwise
+from sklearn.metrics.pairwise import cosine_similarity
 # from transformers import pipeline, set_seed
 import pprint
 from bs4 import BeautifulSoup
@@ -35,14 +35,17 @@ def embed_text(inp):
 def get_sim(embeddings_1, embeddings_2=None):
     # sim = [[0 for _ in range(len(labels_1))] for _ in range(len(labels_1))]
     # embeddings_1 = embed_text(labels_1)
-    sim = 1 - np.arccos(
-        sklearn.metrics.pairwise.cosine_similarity(embeddings_1,
-                                                   embeddings_2)) / np.pi
+    sim = 1 - np.arccos(cosine_similarity(embeddings_1, embeddings_2)) / np.pi
     return sim
 
 
 def split_text(text):
     result = re.findall(r"\b[\-цукенгшщзхъфывапролджэячсмитьбю]+\b", text)
+    return result
+
+
+def split_text2(text):
+    result = re.findall(r"\b[йёцукенгшщзхъфывапролджэячсмитьбю]+\b", text)
     return result
 
 
@@ -62,7 +65,12 @@ def get_news_text(filepath):
         data.decompose()
     for _ in soup.find_all('a'):
         soup.a.unwrap()
-    quote = soup.find_all('div', class_='layout-article__600-align')[0]
+    quote = soup.find_all('div', class_='layout-article__600-align')
+    if len(quote) > 0:
+        quote = quote[0]
+    else:
+        print("WARNING. Not found 'div', class_='layout-article__600-align'")
+        return ""
     rep = re.compile('<.*?>')
     quote = rep.sub("\n", str(quote)).strip()
     quote = quote.replace("«\n", "\n")
@@ -70,7 +78,7 @@ def get_news_text(filepath):
     rep = re.compile('\n+')
     quote = rep.sub("\n", str(quote))
 
-    return quote.replace("\xa0", "&nbsp;")
+    return quote.replace("\xa0", "&nbsp;").lower()
 
 # def get_keyword_1(question, data):
 #     context = str(data)

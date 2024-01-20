@@ -17,3 +17,7 @@ transformers
 sentencepiece
 beautifulsoup4
 lxml
+kivy
+vosk
+sox
+pydub

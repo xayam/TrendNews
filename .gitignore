@@ -1,9 +1,12 @@
 .github/
-venv/
+venv/*
 .idea/
 src/ria/.idea/
 .run/
 __pycache__/
-src/__pycache__/
+src/art/model/*
+src/art/original/*
+src/__pycache__/*
 src/TrendNews*.html
 src/*/data
+option.json
