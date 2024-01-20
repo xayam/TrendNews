@@ -6,6 +6,7 @@ src/ria/.idea/
 __pycache__/
 src/art/model/*
 src/art/original/*
+src/art/scenario/*
 src/__pycache__/*
 src/TrendNews*.html
 src/*/data

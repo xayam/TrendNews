@@ -22,6 +22,8 @@ folderM4a = [f + f"original/youtube.com/{folder}/m4a/" for folder in folders]
 folderWav = [f + f"original/youtube.com/{folder}/wav/" for folder in folders]
 folderMap = [f + f"original/youtube.com/{folder}/map/" for folder in folders]
 folderTxt = [f + f"original/youtube.com/{folder}/txt/" for folder in folders]
+folderTitle = [f + f"original/youtube.com/{folder}/title/" for folder in folders]
+folderLinks = [f + f"original/youtube.com/{folder}/links.txt" for folder in folders]
 
 all_stop = [
     "первое", "второе", "третье",

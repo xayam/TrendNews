@@ -1,17 +1,20 @@
-import os
-import re
+from config import *
 
 folder = "original/youtube.com/"
-filenames = os.listdir(folder)
+txt_files = [folder + f + ".txt" for f in folders]
 
-for name in filenames:
-    with open(folder + name, mode="r", encoding="utf-8") as f:
-        html = f.read()
-    result = re.findall(r"watch\?v=[a-zA-Z\-_0-9]+", html)
-    if result:
-        text = ""
-        result = set(result)
-        for r in result:
-            text += r + "\n"
-        with open(folder + name[:-4] + "_.txt", mode="w", encoding="utf-8") as f:
-            f.write(text.strip())
+for name_path in txt_files:
+    with open(name_path, mode="r", encoding="utf-8") as f:
+        title_watch = f.readlines()
+    channel = name_path.split("/")[-1][:-4]
+    txt_links = ""
+    for tw in title_watch:
+        split1 = tw.strip().split("https://www.youtube.com/watch?v=")
+        title = split1[0].strip()
+        watch = split1[1].strip().split("&")[0]
+        txt_links += f"watch?v={watch}\n"
+        with open(folder + channel + "/title/" + watch + ".txt",
+                  mode="w", encoding="utf-8") as f:
+            f.write(title)
+    with open(folder + channel + "/links.txt", mode="w", encoding="utf-8") as f:
+        f.write(txt_links.strip())
