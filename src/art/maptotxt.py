@@ -1,6 +1,6 @@
 import json
-import os
 from config import *
+import os
 
 
 for mp in folderMap:

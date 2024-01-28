@@ -1,6 +1,6 @@
-import os
 import recognizer
 from config import *
+import os
 
 
 recognize = recognizer.RecognizerClass()

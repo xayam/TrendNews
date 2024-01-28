@@ -13,7 +13,7 @@ for ft in folderTxt:
         names.append(ft + fn)
         news_texts.append(text1)
     k = []
-    top = 15
+    top = 10
     for i in range(len(news_texts)):
         # k = []
         progress(f"{i + 1}/{len(news_texts)}")

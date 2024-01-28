@@ -1,6 +1,6 @@
-import os
 import audio
 from config import *
+import os
 
 
 for fm4a in folderM4a:
