@@ -17,7 +17,7 @@ headers = {
 if os.path.exists("data/"):
     data1 = "data/"
 else:
-    raise "Error. Not found data folder."
+    raise "Error. Not found data folder"
 
 for day in range(0, count_day + 1):
     yesterday = str(date.today() - timedelta(days=day)).replace("-", "")
