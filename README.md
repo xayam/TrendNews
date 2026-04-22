@@ -4,6 +4,9 @@
 - visualize trends (Python generate html+javascript canvas)
 - viewing result html files
 
+# Download last result
+
+https://rutracker.org/forum/viewtopic.php?t=6467372
 
 # Install and run from sources (on Windows)
 
