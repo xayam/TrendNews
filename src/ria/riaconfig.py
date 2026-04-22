@@ -6,7 +6,7 @@ name = "TrendNews"
 preffix = f"{name}-{version}-{site}-"
 domain = f"https://{site}/"
 
-years = [str(a) for a in range(2023, 2016, -1)]
+years = [str(a) for a in range(2024, 2026)]
 months = [str(b).rjust(2, '0') for b in range(12, 0, -1)]
 days = [str(c).rjust(2, '0') for c in range(31, 0, -1)]
 
@@ -17,5 +17,5 @@ all_days = ["понедельник", "вторник", "среда", "четв�
 all_stop = ["россия", "сми", "ростёха", "риа", "москва", "новость",  "дек"]
 
 # for riadownload.py
-count_day = 366 * 10 + 31  # last count days, which will download
+count_day = 366 * 3 + 31  # last count days, which will download
 domain_download = f"{domain}sitemap_article.xml?"

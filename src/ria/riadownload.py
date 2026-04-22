@@ -25,6 +25,8 @@ for day in range(0, count_day + 1):
     print(path)
     if not os.path.exists(path):
         os.mkdir(path)
+    else:
+        continue
     try:
         direct_link = f"{domain_download}date_start={yesterday}&date_end={yesterday}"
         resp = requests.get(direct_link, timeout=3, verify=False, headers=headers)
