@@ -8,8 +8,8 @@ from riaconfig import *
 
 headers = {
     "User-Agent":
-        r"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:96.0) " +
-        "GoogleBot Gecko/20100101 Firefox/96.0",
+        r"Mozilla/5.0 (Windows NT 11.0; Win64; x64; rv:97.1) " +
+        "YandexBot Gecko/20110202 Firefox/95.0",
     "Content-type": "application/x-www-form-urlencoded"
 }
 
